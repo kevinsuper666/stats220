@@ -1,0 +1,146 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+
+```
+
+## TikTok content observation report
+
+This dynamic report summarises the TikTok videos I observed over time.
+
+```{r}
+library(tidyverse)
+
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRzHPTFILyuMsB346F4vOapFEE6kB0BuvMZ2pH-dxTkeXFYXK0GrGbAwVbHYXIVoXqyUleiNAhgnSRf/pub?output=csv")
+
+# Look at the data
+glimpse(logged_data)
+names(logged_data)
+
+# -----------------------------------
+# Part D: Rename variables
+# IMPORTANT:
+# Replace the column names inside ` ` with your exact form question names
+# -----------------------------------
+
+latest_data <- logged_data %>%
+  rename(
+    type = 2,
+    engagement = 3,
+    watched_full = 4,
+    ad = 5,
+    time = 6
+  ) %>%
+  mutate(
+    engagement = as.numeric(engagement)
+  )
+
+# Check cleaned data
+glimpse(latest_data)
+
+# -----------------------------------
+# Explore summary values
+# -----------------------------------
+
+# Total number of observations
+latest_data %>%
+  summarise(total_observations = n())
+
+# Mean engagement score
+latest_data %>%
+  summarise(mean_engagement = mean(engagement, na.rm = TRUE))
+
+# Highest engagement score
+latest_data %>%
+  summarise(max_engagement = max(engagement, na.rm = TRUE))
+
+# Lowest engagement score
+latest_data %>%
+  summarise(min_engagement = min(engagement, na.rm = TRUE))
+
+# -----------------------------------
+# Explore bar charts
+# -----------------------------------
+
+# Bar chart 1: content type
+latest_data %>%
+  ggplot(aes(x = type)) +
+  geom_bar() +
+  labs(
+    title = "Distribution of content types",
+    x = "Content type",
+    y = "Number of videos"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Bar chart 2: watched fully
+latest_data %>%
+  ggplot(aes(x = watched_full)) +
+  geom_bar() +
+  labs(
+    title = "Whether videos were watched fully",
+    x = "Watched fully",
+    y = "Count"
+  )
+
+# Bar chart 3: advertising
+latest_data %>%
+  ggplot(aes(x = ad)) +
+  geom_bar() +
+  labs(
+    title = "Whether videos included advertising or promotion",
+    x = "Advertising or promotion",
+    y = "Count"
+  )
+
+# Bar chart 4: time observed
+latest_data %>%
+  ggplot(aes(x = time)) +
+  geom_bar() +
+  labs(
+    title = "Time of day when videos were observed",
+    x = "Time of day",
+    y = "Count"
+  )
+
+# -----------------------------------
+# Code selected for dynamic report
+# -----------------------------------
+
+# Summary value 1
+latest_data %>%
+  summarise(total_observations = n())
+
+# Summary value 2
+latest_data %>%
+  summarise(mean_engagement = mean(engagement, na.rm = TRUE))
+
+# Final bar chart 1
+latest_data %>%
+  ggplot(aes(x = type)) +
+  geom_bar() +
+  labs(
+    title = "Distribution of content types",
+    x = "Content type",
+    y = "Number of videos"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Final bar chart 2
+latest_data %>%
+  ggplot(aes(x = ad)) +
+  geom_bar() +
+  labs(
+    title = "Whether videos included advertising or promotion",
+    x = "Advertising or promotion",
+    y = "Count"
+  )
+```
